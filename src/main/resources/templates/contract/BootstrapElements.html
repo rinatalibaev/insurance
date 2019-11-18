@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Создать договор</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+</head>
+
+<body>
+    // Фрагмент для простого текстового поля
+    <div th:fragment="simple-text-field(textFieldId, prependText)">
+        <div class="input-group mb-2">
+            <div class="input-group-prepend">
+                <span class="input-group-text" th:text="${prependText}"></span>
+            </div>
+            <input class="form-control" th:id="${textFieldId}" type="text"/>
+        </div>
+    </div>
+
+    // Фрагмент для текстового поля с невозможностью редактирования
+    <div th:fragment="simple-text-field-readonly(textFieldId, prependText)">
+        <div class="input-group mb-2">
+            <div class="input-group-prepend">
+                <span class="input-group-text" th:text="${prependText}"></span>
+            </div>
+            <input class="form-control" th:id="${textFieldId}" type="text" readonly/>
+        </div>
+    </div>
+    // Фрагмент для текстового поля с невозможностью редактирования
+    <div th:fragment="simple-text-field-with-value (textFieldId, prependText, defaultValue)">
+        <div class="input-group mb-2">
+            <div class="input-group-prepend">
+                <span class="input-group-text" th:text="${prependText}"></span>
+            </div>
+            <input class="form-control" th:id="${textFieldId}" type="text" th:value="${defaultValue}"/>
+        </div>
+    </div>
+    // Фрагмент для текстового поля с невозможностью редактирования
+    <div th:fragment="simple-text-field-readonly-with-value(textFieldId, prependText, defaultValue)">
+        <div class="input-group mb-2">
+            <div class="input-group-prepend">
+                <span class="input-group-text" th:text="${prependText}"></span>
+            </div>
+            <input class="form-control" th:id="${textFieldId}" type="text" th:value="${defaultValue}" readonly/>
+        </div>
+    </div>
+
+    // Фрагмент для многострочного текстового поля
+    <div th:fragment="simple-textarea-field(textAreaId, prependText)">
+        <div class="input-group mb-2">
+            <div class="input-group-prepend">
+                <span class="input-group-text" th:text="${prependText}"></span>
+            </div>
+            <textarea class="form-control" th:id="${textAreaId}" type="text"></textarea>
+        </div>
+    </div>
+
+    // Фрагмент для многострочного текстового поля cо значением
+    <div th:fragment="simple-textarea-field-with-value (textAreaId, prependText, defaultValue)">
+        <div class="input-group mb-2">
+            <div class="input-group-prepend">
+                <span class="input-group-text" th:text="${prependText}"></span>
+            </div>
+            <textarea class="form-control" th:id="${textAreaId}" type="text" th:text="${defaultValue}"></textarea>
+        </div>
+    </div>
+
+    <textarea></textarea>
+
+    // Фрагмент для простых выпадающих списков, сформированных из перечислений
+    <div th:fragment="simple-dropdown-enum(enum, prependText, id, defaultValue)" class="input-group mb-2">
+        <div class="input-group-prepend">
+            <span class="input-group-text" th:text="${prependText}"></span>
+        </div>
+        <select class="form-control" th:id="${id}">
+            <option th:if="${defaultValue == 'Квартира'}" th:text="${defaultValue}" th:value="1.7"></option>
+            <option th:if="${defaultValue == 'Дом'}" th:text="${defaultValue}" th:value="1.5"></option>
+            <option th:if="${defaultValue == 'Комната'}" th:text="${defaultValue}" th:value="1.3"></option>
+            <option th:each="enumItem : ${enum}" th:text="${enumItem.getText()}" th:value="${enumItem.getValue()}"></option>
+        </select>
+    </div>
+
+    // Фрагмент для простых выпадающих списков, сформированных из списков (List)
+    <div th:fragment="simple-dropdown-list(list, prependText, id, defaultValue)" class="input-group mb-2">
+        <div class="input-group-prepend">
+            <span class="input-group-text" th:text="${prependText}"></span>
+        </div>
+        <select class="form-control" th:id="${id}">
+            <option th:text="${defaultValue}"></option>
+            <option th:each="listItem : ${list}" th:text="${listItem}" th:value="${listItem}"></option>
+        </select>
+    </div>
+
+    // Фрагмент для поля выбора даты
+    <div th:fragment="simple-data-field(prependText, id, defaultValue)" class="input-group mb-2">
+        <div class="input-group mb-2">
+            <div class="input-group-prepend">
+                <span class="input-group-text" th:text="${prependText}"></span>
+            </div>
+            <input class="form-control" th:id="${id}" type="date" th:value="${defaultValue}"/>
+        </div>
+    </div>
+
+    // Фрагмент для поля даты с невозможностью редактирования
+    <div th:fragment="simple-data-field-readonly(prependText, id, defaultValue)" class="input-group mb-2">
+        <div class="input-group mb-2">
+            <div class="input-group-prepend">
+                <span class="input-group-text" th:text="${prependText}"></span>
+            </div>
+            <input class="form-control" th:id="${id}" type="date" th:value="${defaultValue}" readonly/>
+        </div>
+    </div>
+
+    // Выбор клиентов
+    <div th:fragment="client-select">
+        <div class="modal fade" id="clientSelectModal" tabindex="-1" role="dialog" aria-labelledby="clientSelectModalTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="clientSelectModalTitle">Выбор клиентов</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-5">
+                                <div th:replace="contract/BootstrapElements::simple-text-field ('clientSurname', 'Фамилия')"></div>
+                            </div>
+                            <div class="col-3">
+                                <div th:replace="contract/BootstrapElements::simple-text-field ('clientName', 'Имя')"></div>
+                            </div>
+                            <div class="col-3">
+                                <div th:replace="contract/BootstrapElements::simple-text-field ('clientPatronymic', 'Отчество')"></div>
+                            </div>
+                            <div class="col-1">
+                                <button id="search-client-button" type="button" class="btn btn-primary"><i class="fa fa-search"></i></button>
+                            </div>
+                        </div>
+                        <table id="clientTable" class="table table-bordered table-responsive-lg">
+                            <thead>
+                            <th>ФИО</th>
+                            <th>Дата рождения</th>
+                            <th>Паспортные данные</th>
+                            <th style="display: none">ИД</th>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#newClientModal">Новый</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    // Создание нового клиента
+    <div th:fragment="client-new">
+        <div class="modal fade" id="newClientModal" tabindex="-1" role="dialog" aria-labelledby="newClientModalTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="newClientModalTitle">Новый клиент</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-5">
+                                <div th:replace="contract/BootstrapElements::simple-text-field ('newClientSurname', 'Фамилия')"></div>
+                            </div>
+                            <div class="col-3">
+                                <div th:replace="contract/BootstrapElements::simple-text-field ('newClientName', 'Имя')"></div>
+                            </div>
+                            <div class="col-3">
+                                <div th:replace="contract/BootstrapElements::simple-text-field ('newClientPatronymic', 'Отчество')"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div th:include="contract/BootstrapElements::simple-data-field ('Дата рождения', 'newClientBirthday', '')"></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="saveClient" type="button" class="btn btn-primary" data-dismiss="modal">Сохранить</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Отменить</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    // Редактирование клиента
+    <div th:fragment="client-edit">
+        <div class="modal fade" id="editClientModal" tabindex="-1" role="dialog" aria-labelledby="сlientModalTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="сlientModalTitle">Клиент</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-4">
+                                <div th:replace="contract/BootstrapElements::simple-text-field ('editClientSurname', 'Фамилия')"></div>
+                            </div>
+                            <div class="col-3">
+                                <div th:replace="contract/BootstrapElements::simple-text-field ('editClientName', 'Имя')"></div>
+                            </div>
+                            <div class="col-4">
+                                <div th:replace="contract/BootstrapElements::simple-text-field ('editClientPatronymic', 'Отчество')"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-8">
+                                <div th:include="contract/BootstrapElements::simple-data-field ('Дата рождения', 'editClientBirthday', '')"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-4">
+                                <div th:replace="contract/BootstrapElements::simple-text-field ('editPassportSeries', 'Паспорт серия')"></div>
+                            </div>
+                            <div class="col-4">
+                                <div th:replace="contract/BootstrapElements::simple-text-field ('editPassportNumber', 'Паспорт №')"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="editSaveClient" type="button" class="btn btn-primary" data-dismiss="modal">Сохранить</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Отменить</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+    <script th:src="@{/js/contract.js}" src="/static/js/contract.js"></script>
+</body>
+</html>

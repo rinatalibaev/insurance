@@ -1,0 +1,9 @@
+.calculateDiv, .policyHolder, .contractComment {
+    border: 1px solid grey;
+    background: #fafafa;
+    padding: 10px;
+}
+
+#contractsTable tbody tr{
+    cursor: pointer;
+}

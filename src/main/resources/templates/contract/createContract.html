@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Создать договор</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<!--    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">-->
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/static/css/styles.css" th:href="@{/css/styles.css}">
+<!--    <link rel="stylesheet" type="text/css" href="/static/css/all.css" th:href="@{/css/all.css}">-->
+<!--    <link rel="stylesheet" type="text/css" media="all"-->
+<!--          href="../../css/gtvg.css" th:href="@{/css/gtvg.css}" />-->
+</head>
+
+<body>
+    <div th:replace="contract/BootstrapElements::client-select"></div>
+    <div th:replace="contract/BootstrapElements::client-new"></div>
+    <div th:replace="contract/BootstrapElements::client-edit"></div>
+
+    <div class="container-fluid my-3" style="width: 90%">
+        <div class="calculateDiv">
+            <form>
+                <h4 class="mb-3">Расчет</h4>
+                <div class="row">
+                    <div class="col-4">
+                        <div th:replace="contract/BootstrapElements::simple-text-field ('insuranceAmount', 'Страховая сумма')"></div>
+                        <div th:replace="contract/BootstrapElements::simple-dropdown-enum (${realtyTypeEnum}, 'Тип недвижимости', 'realtyCoefficient','')"></div>
+                        <div th:replace="contract/BootstrapElements::simple-dropdown-list (${yearsList}, 'Год постройки', 'buildingYear', '')"></div>
+                        <div th:replace="contract/BootstrapElements::simple-text-field ('realtyArea', 'Площадь, кв.м.')"></div>
+                    </div>
+
+                    <div class="col-8">
+                        <div class="row">
+                            <div class="col-6" th:include="contract/BootstrapElements::simple-data-field ('Срок действия с', 'startValidity', ${#temporals.format(localDateNow, 'yyyy-MM-dd')})"></div>
+                            <div class="col-4" th:include="contract/BootstrapElements::simple-data-field ('по', 'endValidity', '')"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <button class="btn btn-primary" id="calculatePremium">Рассчитать</button>
+                </div>
+            </form>
+            <div class="row mt-2">
+                <div class="col-6">
+                    <div th:replace="contract/BootstrapElements::simple-data-field-readonly ('Дата расчета', 'calculateDate', '')"></div>
+                </div>
+                <div class="col-6">
+                    <div th:replace="contract/BootstrapElements::simple-text-field ('premiumAmount', 'Премия')"></div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-6">
+                <div th:replace="contract/BootstrapElements::simple-text-field ('contractNumber', '№ договора')"></div>
+            </div>
+            <div class="col-6">
+                <div class="col-8" th:include="contract/BootstrapElements::simple-data-field-readonly ('Дата заключения', 'conclusionDate', '')"></div>
+            </div>
+        </div>
+        <div class="policyHolder">
+            <h4 class="mb-2">Страхователь</h4>
+            <div class="row">
+                <div class="col-1">
+                    <button id="chooseClient" type="button" class="btn btn-primary" data-toggle="modal" data-target="#clientSelectModal">Выбрать</button>
+                </div>
+                <div class="col-9 ml-4">
+                    <div th:replace="contract/BootstrapElements::simple-text-field-readonly ('clientFio', 'ФИО')"></div>
+                </div>
+                <div class="col-1">
+                    <button class="btn btn-secondary" id="editClient" data-toggle="modal" data-target="#editClientModal" disabled>Изменить</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-5">
+                    <div th:include="contract/BootstrapElements::simple-data-field ('Дата рождения', 'clientBirthday', '')"></div>
+                </div>
+                <div class="col-4">
+                    <div th:replace="contract/BootstrapElements::simple-text-field ('passportSeries', 'Паспорт серия')"></div>
+                </div>
+                <div class="col-3">
+                    <div th:replace="contract/BootstrapElements::simple-text-field ('passportNumber', 'Паспорт №')"></div>
+                </div>
+            </div>
+            <h6 class="mb-2 mt-2">Адрес недвижимости</h6>
+            <div class="row">
+                <div class="col-3">
+                    <div th:replace="contract/BootstrapElements::simple-text-field ('realtyState', 'государство')"></div>
+                </div>
+                <div class="col-2">
+                    <div th:replace="contract/BootstrapElements::simple-text-field ('realtyIndex', 'индекс')"></div>
+                </div>
+                <div class="col-5">
+                    <div th:replace="contract/BootstrapElements::simple-text-field ('realtyRegion', 'республика, край, область')"></div>
+                </div>
+                <div class="col-2">
+                    <div th:replace="contract/BootstrapElements::simple-text-field ('realtyDistrict', 'район')"></div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-3">
+                    <div th:replace="contract/BootstrapElements::simple-text-field ('realtyLocality', 'населенный пункт')"></div>
+                </div>
+                <div class="col-2">
+                    <div th:replace="contract/BootstrapElements::simple-text-field ('realtyStreet', 'улица')"></div>
+                </div>
+                <div class="col-1">
+                    <div th:replace="contract/BootstrapElements::simple-text-field ('realtyHouse', 'дом')"></div>
+                </div>
+                <div class="col-2">
+                    <div th:replace="contract/BootstrapElements::simple-text-field ('realtyHousing', 'корпус')"></div>
+                </div>
+                <div class="col-2">
+                    <div th:replace="contract/BootstrapElements::simple-text-field ('realtyBuilding', 'строение')"></div>
+                </div>
+                <div class="col-2">
+                    <div th:replace="contract/BootstrapElements::simple-text-field ('realtyApartment', 'квартира')"></div>
+                </div>
+            </div>
+        </div>
+        <div class="contractComment mt-2">
+            <h4 class="mb-2">КОММЕНТАРИЙ</h4>
+            <div class="row">
+                <div class="col">
+                    <div th:replace="contract/BootstrapElements::simple-textarea-field ('contractCommentText', 'Комментарий к договору (не печатается на полисе)')"></div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mt-3">
+            <button class="btn btn-primary" id="saveContractButton">Сохранить</button>
+            <button class="btn btn-secondary" id="contractsOpenButton">К списку договоров</button>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/plug-ins/1.10.20/i18n/Russian.json"></script>
+    <script th:src="@{/js/contract.js}" src="/static/js/contract.js"></script>
+    <script>
+        localStorage.clear();
+    </script>
+</body>
+</html>
