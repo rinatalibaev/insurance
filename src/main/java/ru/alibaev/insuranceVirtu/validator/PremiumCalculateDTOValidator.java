@@ -21,8 +21,8 @@ public class PremiumCalculateDTOValidator implements
         int indexOfDecimal = doubleString.indexOf(".");
         try {
             return premiumCalculateDTO.getRealtyCoefficient() != 0 &&
-                    premiumCalculateDTO.getBuildingYear() != 0 &&
-                    premiumCalculateDTO.getBuildingYear() <= LocalDate.now().getYear() &&
+                    premiumCalculateDTO.getBuildingYear().getValue() != 0 &&
+                    premiumCalculateDTO.getBuildingYear().getValue() <= LocalDate.now().getYear() &&
                     String.valueOf(premiumCalculateDTO.getBuildingYear()).length() == 4 &&
                     premiumCalculateDTO.getInsuranceAmount() != 0 &&
                     premiumCalculateDTO.getRealtyArea() != 0 &&
