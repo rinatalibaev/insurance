@@ -24,9 +24,9 @@ public class PremiumService {
             areaCoefficient = 2;
         }
 
-        if (premiumCalculateDTO.getBuildingYear() < 2000) {
+        if (premiumCalculateDTO.getBuildingYear().getValue() < 2000) {
             buildingYearCoefficient = 1.3;
-        } else if (premiumCalculateDTO.getBuildingYear() <= 2014) {
+        } else if (premiumCalculateDTO.getBuildingYear().getValue() <= 2014) {
             buildingYearCoefficient = 1.6;
         } else {
             buildingYearCoefficient = 2;
