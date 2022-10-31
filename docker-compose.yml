@@ -1,0 +1,23 @@
+version: '3.1'
+services:
+
+  insurance:
+    image: insurance
+    ports:
+      - 9099:9099
+
+  db:
+    image: postgres
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
+      POSTGRES_DB: insurance
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080

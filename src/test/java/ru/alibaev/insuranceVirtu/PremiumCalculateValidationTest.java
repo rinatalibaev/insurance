@@ -29,8 +29,8 @@ public class PremiumCalculateValidationTest {
             throws Exception {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("buildingYear", "2019");
-        jsonObject.put("endValidity", "2020-11-25");
-        jsonObject.put("startValidity", "2020-05-09");
+        jsonObject.put("endValidity", "2023-11-30");
+        jsonObject.put("startValidity", "2022-12-01");
         jsonObject.put("insuranceAmount", "1024844");
         jsonObject.put("realtyArea", "200.2");
         jsonObject.put("realtyCoefficient", "1.2");
