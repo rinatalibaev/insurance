@@ -5,6 +5,7 @@ WORKDIR /home/apps/insurance
 COPY .mvn/ .mvn
 COPY mvnw pom.xml ./
 
+RUN chsh -s /bin/bash
 RUN ./mvnw dependency:resolve
 
 COPY src ./src
